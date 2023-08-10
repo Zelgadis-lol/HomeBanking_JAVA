@@ -23,6 +23,9 @@ public class TransactionDTO {
         this.date = transaction.getDate();
     }
 
+    public long getId() {
+        return id;
+    }
     public TransactionType getType() {
         return type;
     }

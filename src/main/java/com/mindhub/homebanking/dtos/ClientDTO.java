@@ -24,18 +24,18 @@ public class ClientDTO {
         this.accounts = client.getAccounts().stream().map(AccountDTO::new).collect(toSet());
     }
 
+    public long getId() {
+        return id;
+    }
     public String getFirstName() {
         return firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public String getEmail() {
         return email;
     }
-
     public String toString() {
         return firstName + " " + lastName;
     }
