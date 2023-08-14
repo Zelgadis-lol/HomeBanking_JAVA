@@ -1,10 +1,14 @@
 package com.mindhub.homebanking.dtos;
 
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.ClientLoan;
+import com.mindhub.homebanking.models.Loan;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class ClientDTO {
@@ -15,7 +19,7 @@ public class ClientDTO {
     private String email;
 
     Set<AccountDTO> accounts = new HashSet<>();
-    Set<ClientLoanDTO> loans = new HashSet<>();
+    Set<ClientLoanDTO> clientLoans = new HashSet<>();
 
     public ClientDTO(Client client) {
         this.id = client.getId();
@@ -23,7 +27,8 @@ public class ClientDTO {
         this.lastName = client.getLastName();
         this.email = client.getEmail();
         this.accounts = client.getAccounts().stream().map(AccountDTO::new).collect(toSet());
-        this.loans = client.getClientLoans().stream().map(ClientLoanDTO::new).collect(toSet());
+        //this.loans = client.getClientLoans().stream().map(ClientLoanDTO::new).collect(toSet());
+        this.clientLoans = client.getClientLoans().stream().map(ClientLoanDTO::new).collect(toSet());
     }
 
     public long getId() {
@@ -43,6 +48,7 @@ public class ClientDTO {
     }
 
     public Set<AccountDTO> getAccounts(){return accounts;}
-    public Set<ClientLoanDTO> getClientLoans(){return loans;}
+    public Set<ClientLoanDTO> getClientLoans(){return clientLoans;}
+
 
 }

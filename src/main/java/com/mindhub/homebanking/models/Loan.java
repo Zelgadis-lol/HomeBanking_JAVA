@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
+
 @Entity
 public class Loan {
     @Id
@@ -20,7 +22,7 @@ public class Loan {
     @ElementCollection
     private List<Integer> payments = new ArrayList<>();
 
-    @OneToMany(mappedBy="loanClient", fetch=FetchType.EAGER) //ver aca el mapped
+    @OneToMany(mappedBy="loan", fetch=FetchType.EAGER) //ver aca el mapped
     Set<ClientLoan> clientLoans = new HashSet<>();
 
     public Loan() { }
@@ -44,8 +46,9 @@ public class Loan {
         return payments;
     }
 
-    public Set<ClientLoan> getClientLoans() {
-        return clientLoans;
+    @JsonIgnore
+    public List<Client> getClients() {
+        return clientLoans.stream().map(ClientLoan::getClient).collect(toList());
     }
 
     public void setName(String name) {
