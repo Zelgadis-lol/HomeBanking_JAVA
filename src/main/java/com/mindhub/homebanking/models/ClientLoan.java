@@ -53,11 +53,10 @@ public class ClientLoan {
     public void setPayments(int payments) {
         this.payments = payments;
     }
-    public void setClient(Client clientLoan) {
-        this.client = clientLoan;
+    public void setClient(Client client) {
+        this.client = client;
     }
-    public void setLoan(Loan loanClient) {
-        this.loan = loanClient;
+    public void setLoan(Loan loan) {
+        this.loan = loan;
     }
-
 }

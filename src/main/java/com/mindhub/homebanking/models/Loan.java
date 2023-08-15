@@ -21,9 +21,8 @@ public class Loan {
     private double maxAmount;
     @ElementCollection
     private List<Integer> payments = new ArrayList<>();
-
-    @OneToMany(mappedBy="loan", fetch=FetchType.EAGER) //ver aca el mapped
-    Set<ClientLoan> clientLoans = new HashSet<>();
+    @OneToMany(mappedBy="loan", fetch=FetchType.EAGER)
+    private Set<ClientLoan> clientLoans = new HashSet<>();
 
     public Loan() { }
 
@@ -47,9 +46,7 @@ public class Loan {
     }
 
     @JsonIgnore
-    public List<Client> getClients() {
-        return clientLoans.stream().map(ClientLoan::getClient).collect(toList());
-    }
+    public List<Client> getClients() {return clientLoans.stream().map(ClientLoan::getClient).collect(toList()); }
 
     public void setName(String name) {
         this.name = name;
@@ -59,5 +56,11 @@ public class Loan {
     }
     public void setPayments(List<Integer> payments) { this.payments = payments; }
 
+    public Set<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
 
+    public void setClientLoans(Set<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
 }

@@ -16,7 +16,6 @@ public class Transaction {
     private double amount;
     private String description;
     private LocalDateTime date;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="account_id")
     private Account account;
