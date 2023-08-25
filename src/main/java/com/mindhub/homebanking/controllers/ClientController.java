@@ -20,8 +20,8 @@ public class ClientController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-
+    @Autowired
+    private ClientRepository clientRepository;
 
     @RequestMapping(path = "/clients", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
@@ -40,9 +40,6 @@ public class ClientController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-    @Autowired
-    private ClientRepository clientRepository;
 
     @RequestMapping("/clients")
     public List<ClientDTO> getClients() {

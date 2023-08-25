@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.web.method.HandlerTypePredicate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,8 @@ class WebAuthorization {
                 .antMatchers("/h2-console/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/clients").hasAuthority("ADMIN")
 
-                .antMatchers("/**").hasAnyAuthority("USER", "ADMIN");
+                .antMatchers("/**").hasAnyAuthority("CLIENT", "ADMIN")
+                .anyRequest().denyAll();
 
 
 

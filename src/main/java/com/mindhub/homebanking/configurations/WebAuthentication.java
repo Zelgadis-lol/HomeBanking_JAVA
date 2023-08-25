@@ -33,7 +33,7 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
                 }else
                 {
                     return new User(client.getEmail(), client.getPassword(),
-                        AuthorityUtils.createAuthorityList("USER"));
+                        AuthorityUtils.createAuthorityList("CLIENT"));
                 }
 
             } else {

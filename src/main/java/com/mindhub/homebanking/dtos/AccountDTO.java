@@ -14,7 +14,7 @@ public class AccountDTO {
     private LocalDate date;
     private double balance;
 
-    Set<TransactionDTO> transactions = new HashSet<>();
+    private Set<TransactionDTO> transactions = new HashSet<>();
 
     public AccountDTO(Account account) {
         this.id = account.getId();
