@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -36,10 +34,17 @@ public class AccountController {
     @RequestMapping("/accounts/{id}")
     public ResponseEntity<AccountDTO> getAccount(Authentication authentication, @PathVariable long id) {
         Client client = clientRepository.findByEmail(authentication.getName());
-        if (id != client.getId())
+        if (client.getAccounts().stream().noneMatch(gc -> gc.getId() == id))
             return new ResponseEntity<AccountDTO>((AccountDTO) null, HttpStatus.UNAUTHORIZED);
 
         return accountRepository.findById(id).map(AccountDTO::new).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("clients/current/accounts")
+    public List<AccountDTO> getAccountDTO(Authentication authentication){
+        Client client = clientRepository.findByEmail(authentication.getName());
+        return client.getAccounts().stream().map(AccountDTO::new).collect(toList());
+                //accountRepository.findAll().stream().map(AccountDTO::new).collect(Collectors.toList());
     }
 
     @PostMapping("/clients/current/accounts")
