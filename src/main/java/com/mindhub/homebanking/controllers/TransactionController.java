@@ -7,6 +7,9 @@ import com.mindhub.homebanking.models.TransactionType;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +28,11 @@ import java.util.Set;
 public class TransactionController {
 
     @Autowired
-    TransactionRepository transactionRepository;
+    private TransactionService transactionService;
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
 
     @Transactional
@@ -53,15 +56,15 @@ public class TransactionController {
         if (fromAccountNumber.equals(toAccountNumber))
             return new ResponseEntity<>("The Accounts are the same", HttpStatus.FORBIDDEN);
 
-        Account accountOrigin=accountRepository.findByNumber(fromAccountNumber);
+        Account accountOrigin=accountService.findByNumber(fromAccountNumber);
         if (accountOrigin == null)
             return new ResponseEntity<>("Account Origin not exists",HttpStatus.FORBIDDEN);
 
-        Account accountDestiny=accountRepository.findByNumber(toAccountNumber);
+        Account accountDestiny=accountService.findByNumber(toAccountNumber);
         if (accountDestiny == null)
             return new ResponseEntity<>("Account Destiny not exists",HttpStatus.FORBIDDEN);
 
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.findByEmail(authentication.getName());
 
         Set<Account> setClientAccounts= client.getAccounts();
         if(setClientAccounts.stream().noneMatch(gc -> gc.getNumber().equals(fromAccountNumber)) )
@@ -72,8 +75,8 @@ public class TransactionController {
 
         Transaction tra1 = new Transaction(TransactionType.DEBIT, amount, description, LocalDateTime.now(), accountOrigin);
         Transaction tra2 = new Transaction(TransactionType.CREDIT, amount, description, LocalDateTime.now(), accountDestiny);
-        transactionRepository.save(tra1);
-        transactionRepository.save(tra2);
+        transactionService.saveTransaction(tra1);
+        transactionService.saveTransaction(tra2);
 
         double balOrigin = accountOrigin.getBalance() - amount;
         double balDestiny = accountDestiny.getBalance() + amount;

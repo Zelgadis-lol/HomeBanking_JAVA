@@ -5,6 +5,8 @@ import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,34 +24,34 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api")
 public class AccountController {
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @RequestMapping("/accounts")
     public List<AccountDTO> getAccounts() {
-        return accountRepository.findAll().stream().map(AccountDTO::new).collect(toList());
+        return accountService.getAccounts();
     }
 
     @RequestMapping("/accounts/{id}")
     public ResponseEntity<AccountDTO> getAccount(Authentication authentication, @PathVariable long id) {
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.findByEmail(authentication.getName());
         if (client.getAccounts().stream().noneMatch(gc -> gc.getId() == id))
             return new ResponseEntity<AccountDTO>((AccountDTO) null, HttpStatus.UNAUTHORIZED);
 
-        return accountRepository.findById(id).map(AccountDTO::new).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return accountService.findById(id);
     }
 
     @GetMapping("clients/current/accounts")
     public List<AccountDTO> getAccountDTO(Authentication authentication){
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.findByEmail(authentication.getName());
         return client.getAccounts().stream().map(AccountDTO::new).collect(toList());
                 //accountRepository.findAll().stream().map(AccountDTO::new).collect(Collectors.toList());
     }
 
     @PostMapping("/clients/current/accounts")
     public ResponseEntity<Object> newAccount(Authentication authentication) {
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.findByEmail(authentication.getName());
 
         if(authentication.getAuthorities().stream().noneMatch(ga -> ga.getAuthority().equals("CLIENT")))
             return new ResponseEntity<>("The User is not a CLIENT", HttpStatus.FORBIDDEN);
@@ -57,11 +59,16 @@ public class AccountController {
         if(client.getAccounts().size() >= 3)
             return new ResponseEntity<>("3 Accounts max", HttpStatus.FORBIDDEN);
 
-        Account account = new Account(Utils.getNumberAccount(), LocalDate.now(), 0.0);
+        String accountNumber;
+        do {
+            accountNumber = Utils.getNumberAccount();
+        }while(accountService.findByNumber(accountNumber) != null);
+
+        Account account = new Account(accountNumber, LocalDate.now(), 0.0);
 
         client.addAccount(account);
-        accountRepository.save(account);
-        clientRepository.save(client);
+        accountService.saveAccount(account);
+        clientService.saveClient(client);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
