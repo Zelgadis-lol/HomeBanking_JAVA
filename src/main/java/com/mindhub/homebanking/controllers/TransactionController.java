@@ -4,9 +4,6 @@ import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.models.Transaction;
 import com.mindhub.homebanking.models.TransactionType;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.services.TransactionService;
@@ -67,7 +64,7 @@ public class TransactionController {
         Client client = clientService.findByEmail(authentication.getName());
 
         Set<Account> setClientAccounts= client.getAccounts();
-        if(setClientAccounts.stream().noneMatch(gc -> gc.getNumber().equals(fromAccountNumber)) )
+        if(!setClientAccounts.contains(accountOrigin))
             return new ResponseEntity<>("Origin Account not valid", HttpStatus.FORBIDDEN);
 
         if (accountOrigin.getBalance() < amount || amount <= 0)
