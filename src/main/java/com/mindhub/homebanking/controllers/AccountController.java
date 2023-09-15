@@ -28,12 +28,12 @@ public class AccountController {
     @Autowired
     private ClientService clientService;
 
-    @RequestMapping("/accounts")
+    @GetMapping("/accounts")
     public List<AccountDTO> getAccounts() {
         return accountService.getAccounts();
     }
 
-    @RequestMapping("/accounts/{id}")
+    @GetMapping("/accounts/{id}")
     public ResponseEntity<AccountDTO> getAccount(Authentication authentication, @PathVariable long id) {
         Client client = clientService.findByEmail(authentication.getName());
         if (client.getAccounts().stream().noneMatch(gc -> gc.getId() == id))

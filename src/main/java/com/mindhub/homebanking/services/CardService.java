@@ -10,5 +10,5 @@ public interface CardService {
     public List<CardDTO> getCards();
     public Card findCardByNumber(String number);
     public void saveCard(Card card);
-    public ResponseEntity<CardDTO> findById(long id);
+    public Card findById(long id);
 }

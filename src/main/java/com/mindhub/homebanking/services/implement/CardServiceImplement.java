@@ -33,7 +33,7 @@ public class CardServiceImplement implements CardService {
     }
 
     @Override
-    public ResponseEntity<CardDTO> findById(long id) {
-        return cardRepository.findById(id).map(CardDTO::new).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public Card findById(long id) {
+        return cardRepository.findById(id).orElse(null);
     }
 }

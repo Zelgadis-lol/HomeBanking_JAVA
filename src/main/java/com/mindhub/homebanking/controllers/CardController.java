@@ -26,21 +26,12 @@ public class CardController {
     @Autowired
     private ClientService clientService;
 
-    @RequestMapping("/cards")
+    @GetMapping("/cards")
     public List<CardDTO> getCards() {
         return cardService.getCards();
     }
 
-    @RequestMapping("/cards/{id}")
-    public ResponseEntity<CardDTO> getCard(Authentication authentication, @PathVariable long id) {
-        Client client = clientService.findByEmail(authentication.getName());
-        if (id != client.getId())
-            return new ResponseEntity<CardDTO>((CardDTO) null, HttpStatus.UNAUTHORIZED);
-
-        return cardService.findById(id);
-    }
-
-    @RequestMapping(path = "clients/current/cards", method = RequestMethod.POST)
+    @PostMapping(path = "clients/current/cards")
     public ResponseEntity<Object> createCard(Authentication authentication,
                                @RequestParam CardType cardType, @RequestParam CardColor cardColor) {
 
@@ -55,7 +46,7 @@ public class CardController {
         if(authentication.getAuthorities().stream().noneMatch(ga -> ga.getAuthority().equals("CLIENT")))
             return new ResponseEntity<>("The User is not a CLIENT", HttpStatus.FORBIDDEN);
 
-        if(client.getCards().stream().filter(gc -> gc.getType().equals(cardType)).count() >= 3)
+        if(client.getCards().stream().filter(gc -> gc.getType().equals(cardType)).filter(Card::isActive).count() >= 3)
             return new ResponseEntity<>("3 "+cardType+" Cards max", HttpStatus.FORBIDDEN);
 
         String cardNumber;
@@ -68,13 +59,33 @@ public class CardController {
         LocalDate thruDate = LocalDate.now();
         LocalDate fromDate = thruDate.plusYears(5);
 
-        Card card1 = new Card(client.getFirstName() + " " + client.getLastName(), cardType, cardColor, cardNumber, cvv, fromDate, thruDate);
+        Card card1 = new Card(client.getFirstName() + " " + client.getLastName(), cardType, cardColor, cardNumber, cvv, fromDate, thruDate, true);
         cardService.saveCard(card1);
 
         client.addCard(card1);
         clientService.saveClient(client);
 
         return new ResponseEntity<>("Card created", HttpStatus.CREATED);
+    }
+
+    @PatchMapping("clients/current/cards/{id}")
+    public ResponseEntity<Object> deleteCard(@PathVariable long id, Authentication authentication){
+        Client client = clientService.findByEmail(authentication.getName());
+        Card card = cardService.findById(id);
+
+        boolean hasCard = client.getCards().contains(card);
+
+        if(card == null){
+            return new ResponseEntity<>("Card not found", HttpStatus.FORBIDDEN);
+        }
+
+        if(!hasCard){
+            return new ResponseEntity<>("Card dont belong to authenticated client", HttpStatus.FORBIDDEN);
+        }
+
+        card.setActive(false);
+        cardService.saveCard(card);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

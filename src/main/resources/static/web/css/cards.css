@@ -1,6 +1,14 @@
+.card_delete{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+}
+
 .plastic-card {
-	width: 320px;
-	height: 190px;
+    display: flex;
+    width: 320px;
+	height: 240px;
 	-webkit-perspective: 600px;
 	-moz-perspective: 600px;
 	perspective: 600px;
@@ -156,13 +164,13 @@
 	left: 15px;
 }
 
-.plastic-card:hover .plastic-card__front {
+.plastic-card-hover:hover .plastic-card__front {
 	-webkit-transform: rotateY(180deg);
 	-moz-transform: rotateY(180deg);
 
 }
 
-.plastic-card:hover .plastic-card__back {
+.plastic-card-hover:hover .plastic-card__back {
 	-webkit-transform: rotateY(0deg);
 	-moz-transform: rotateY(0deg);
 }

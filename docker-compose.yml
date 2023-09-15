@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  java_db:
+    container_name: java_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_DB=homebanking
+      - POSTGRES_USER=homebankingapp
+      - POSTGRES_PASSWORD=123456
+
+  java_app:
+    container_name: java_app
+    image: gradle:7.6.1-jdk11-alpine
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - DATABASE_URL=jdbc:postgresql://java_db:5432/homebanking
+      - DATABASE_USERNAME=homebankingapp
+      - DATABASE_PASSWORD=123456
+    ports:
+      - "8080:8080"
+    depends_on:
+      - java_db

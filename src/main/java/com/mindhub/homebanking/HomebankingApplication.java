@@ -55,9 +55,9 @@ public class HomebankingApplication {
             cl4.setClient(cli2);
             cl4.setLoan(loa3);
 
-            Card card1 = new Card(cli1.getFirstName() + ' ' + cli1.getLastName(), CardType.DEBIT, CardColor.GOLD, "122155313153", 123, LocalDate.now().plusYears(5), LocalDate.now());
-            Card card2 = new Card(cli1.getFirstName() + ' ' + cli1.getLastName(), CardType.CREDIT, CardColor.TITANIUM, "222155313153", 321, LocalDate.now().plusYears(5), LocalDate.now());
-            Card card3 = new Card(cli2.getFirstName() + ' ' + cli2.getLastName(), CardType.CREDIT, CardColor.SILVER, "126768313153", 111, LocalDate.now().plusYears(5), LocalDate.now());
+            Card card1 = new Card(cli1.getFirstName() + ' ' + cli1.getLastName(), CardType.DEBIT, CardColor.GOLD, "122155313153", 123, LocalDate.now().plusYears(5), LocalDate.now(), true);
+            Card card2 = new Card(cli1.getFirstName() + ' ' + cli1.getLastName(), CardType.CREDIT, CardColor.TITANIUM, "222155313153", 321, LocalDate.now().plusYears(5), LocalDate.now(), true);
+            Card card3 = new Card(cli2.getFirstName() + ' ' + cli2.getLastName(), CardType.CREDIT, CardColor.SILVER, "126768313153", 111, LocalDate.now().plusYears(5), LocalDate.now(), true);
 
             cli1.addAccount(acc1);
             cli1.addAccount(acc2);

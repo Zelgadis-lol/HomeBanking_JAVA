@@ -63,12 +63,12 @@ public class ClientController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @RequestMapping("/clients")
+    @GetMapping("/clients")
     public List<ClientDTO> getClients() {
         return clientService.getClients();
     }
 
-    @RequestMapping("/clients/{id}")
+    @GetMapping("/clients/{id}")
     public ResponseEntity<ClientDTO> getClient(Authentication authentication, @PathVariable long id) {
         Client client = clientService.findByEmail(authentication.getName());
         if (id != client.getId())
@@ -77,7 +77,7 @@ public class ClientController {
         return clientService.getClient(id);
     }
 
-    @RequestMapping("/clients/current")
+    @GetMapping("/clients/current")
     public ClientDTO getClient(Authentication authentication) {
         return new ClientDTO(clientService.findByEmail(authentication.getName()));
     }
