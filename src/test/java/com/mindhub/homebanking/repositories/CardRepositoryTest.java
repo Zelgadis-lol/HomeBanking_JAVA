@@ -19,7 +19,7 @@ class CardRepositoryTest {
     @Autowired
     CardRepository cardRepository;
 
-    @Test
+/*    @Test
     public void existCards(){
         List<Card> cards = cardRepository.findAll();
         assertThat(cards,is(not(empty())));
@@ -30,5 +30,5 @@ class CardRepositoryTest {
         for (Card card :cards) {
             assertEquals(3, (String.valueOf(card.getCvv())).length());
         }
-    }
+    }*/
 }

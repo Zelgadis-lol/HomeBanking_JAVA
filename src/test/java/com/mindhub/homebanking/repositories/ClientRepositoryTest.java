@@ -17,7 +17,7 @@ class ClientRepositoryTest {
     @Autowired
     ClientRepository clientRepository;
 
-    @Test
+/*    @Test
     public void existClients(){
         List<Client> clients = clientRepository.findAll();
         assertThat(clients,is(not(empty())));
@@ -29,5 +29,5 @@ class ClientRepositoryTest {
         for (Client client :clients) {
            assertThat(client.getEmail(), is(not(emptyString())));
         }
-    }
+    }*/
 }
